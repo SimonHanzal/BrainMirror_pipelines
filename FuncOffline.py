@@ -42,7 +42,7 @@ def substitute_errors(data, mean_value):
     return data
 
 
-def analyse_all(dataset, software, SRATE, convert_power=True, convert_decibels=False, convert_mean=True, convert_max=True):
+def analyse_all(file_location, dataset, software, SRATE, convert_power=True, convert_decibels=False, convert_mean=True, convert_max=True):
     # And every channel
     data = software_import(file_location, dataset, software)
     all_frequencies = np.empty([int(len(data[:, 0])/2), 2])
