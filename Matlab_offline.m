@@ -25,12 +25,13 @@ eeglab redraw;
 
 % Filtering %
 
-% Epoching %
+% Epoching % #optional
 
 % Exporting %
 
 %% 4. Time-Frequency Analysis %% <- Cohen course on FFT
 
+cd("C:\Users\simonha\PycharmProjects\BrainMirror_pipelines")
 data = table2array(readtable('test.txt'));
 
 fs=512;
@@ -47,3 +48,9 @@ f = 0:df:fs/2;
 X = fft(x,nfft);
 X = X(1:nfft/2+1);
 figure; plot(f,sqrt(abs(X))); axis([0,50,0,10e2])
+
+% Smoothing %
+
+% Extracting value
+
+[value where] = max(f(1000:end))
