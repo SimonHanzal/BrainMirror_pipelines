@@ -1,4 +1,5 @@
 from FuncOffline import process_plot
+from FuncWelchOffline import process_plot_welch
 
 #####################
 # Participant names #
@@ -14,7 +15,11 @@ from FuncOffline import process_plot
 file_location = "C://Users//simonha//PycharmProjects//BrainMirror//data//"
 test_0410 = ["211221_1_baseline", "211221_2_baseline"]
 channel_names = ["PO7", "PO8"]
-save_as = "BrainMirror_test_3"
+save_vanilla_as = "BrainMirror_test_3"
+save_welch_as = "BrainMirror_test_3"
 
-process_plot(file_location, test_0410, save_as, "brainmirror", 512, channel_names,
+process_plot(file_location, test_0410, save_vanilla_as, "brainmirror", 512, channel_names,
              convert_max=False, convert_decibels=False)
+
+process_plot_welch(file_location, test_0410, save_welch_as, "brainmirror", 512, channel_names,
+             convert_mean=False, convert_power=False, convert_max=False, convert_decibels=False)

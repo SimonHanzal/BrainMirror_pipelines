@@ -11,7 +11,8 @@ import pandas as pd
 import matplotlib as mpl
 # This is the command needed for bugfixing to work in PyCharm.
 mpl.use('TKAgg')
-
+from FuncOffline import substitute_errors
+from statistics import mean
 # Here, an mne info object is generated to fit the txt data from BrainMirror or BioTrace recordings.
 # There are 2, timestamps need to be dealt with before and the data needs to be sent in chunks to avoid extra computing.
 # TODO: 2 Look at timestamp-time mismatch.
@@ -33,7 +34,7 @@ info['description'] = 'E_02'
 # TODO: Implement a checker that data is cleaned so that max_rows is not needed.
 # TODO: Clip the data a bit and compare it with Lucie's notes.
 data = np.loadtxt(os.path.abspath('C://Users//simonha//PycharmProjects//BrainMirror//data//external_software//e_09.txt'), delimiter=',', max_rows=800000)
-pass
+"""
 # This is where dataframes come in to remove rows, this could probably be done more elegantly.
 # TODO: Redo offline data wrangling to be more elegant.
 # TODO: Figure out similarity between BioTrace and BrainMirror.
@@ -43,9 +44,14 @@ data = data.drop_duplicates(subset=['time'])
 data = data.transpose()
 data = data.to_numpy(na_value=0)
 data = np.delete(data, [1], axis=0)
+"""
 # This bit is a nightmare as the scales is often really mismatched on BrainMirror for some bizzare reason.
 # TODO: Figure out what is going on with scaling issues.
-data *= 1e-07
+# data *= 1e-07
+data = data[:,1:2]
+for i in range(1):
+    channel_mean = mean(data[:, i], )
+    data[:, i] = substitute_errors(data[:, i], channel_mean)
 
 # TODO: Try the filtering process on data which should be ok, to see what comes out.
 # This filtering process copies that which is used in NFBLab by default, first a 4th order Butterworth filter.

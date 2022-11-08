@@ -1,3 +1,7 @@
+"""
+This is a wildshot at  using a welch transform instead, which seems to segment automatically.
+"""
+
 # Packages used
 import matplotlib
 # Used to surpress an issue in matplotlib
@@ -17,7 +21,7 @@ from scipy.signal import detrend, welch
 from scipy.signal.windows import hann
 from statistics import mean
 
-def software_import(file_location, dataset, software):
+def software_import_welch(file_location, dataset, software):
     # Which can either be the original BioTrace .txt export file.
     if software == "biotrace":
         file_path = os.path.abspath(
@@ -33,7 +37,7 @@ def software_import(file_location, dataset, software):
         print("Software must be either 'biotrace' or 'brainmirror'.")
 
 
-def substitute_errors(data, mean_value):
+def substitute_errors_welch(data, mean_value):
     # Replacing 0 and NA values based on mean, of course only if there's something to base the mean on.
     if not isnan(mean_value):
         for i in range(len(data - 1)):
@@ -42,18 +46,20 @@ def substitute_errors(data, mean_value):
     return data
 
 
-def analyse_all(file_location, dataset, software, SRATE, convert_power=True, convert_decibels=False, convert_mean=True, convert_max=True):
+def analyse_all_welch(file_location, dataset, software, SRATE, convert_power=True, convert_decibels=False, convert_mean=True, convert_max=True):
     # And every channel
-    data = software_import(file_location, dataset, software)
+    data = software_import_welch(file_location, dataset, software)
     all_frequencies = np.empty([int(len(data[:, 0])/2), 2])
-    all_PS = np.empty([int(len(data[:, 0])/2), 2])
+    # all_PS = np.empty([int(len(data[:, 0])/2), 2])
+    all_PS = np.empty([257, 2])
+    all_frequencies = np.empty([256, 2])
     for k in range(2):
         # 1. Preparing Data
         channel_calculation = data[:, k]
         channel_mean = mean(channel_calculation)
 
         # 2. Patching up Data
-        channel_calculation = substitute_errors(channel_calculation, channel_mean)
+        channel_calculation = substitute_errors_welch(channel_calculation, channel_mean)
         # Converting data into a workable array
         channel_calculation = np.array(channel_calculation)
 
@@ -70,10 +76,13 @@ def analyse_all(file_location, dataset, software, SRATE, convert_power=True, con
         # 5. FFT
         # Applying a FFT
         freq_data = fft(channel_calculation)
+        # a possible alternative:
+        freqs, freq_data = welch(channel_calculation, SRATE, window=hann(512, True))
+        # noverlap=128, nfft=1024, return_onesided=True)
         # Getting the total number of channels, necessary for the calculation
         # 6. Getting the Frequencies
         number = len(channel_calculation)
-        frequencies = np.linspace(0, SRATE/2, int(number / 2))
+        frequencies = np.linspace(0, SRATE/2, int(SRATE / 2)) # number replaced by SRATE
         # The y axis time frequency data, refined based on the number of observations
 
         # 7. Using only useful data.
@@ -99,7 +108,7 @@ def analyse_all(file_location, dataset, software, SRATE, convert_power=True, con
             channel_calculation = channel_calculation/power_max
 
         # 9. Smoothing: applying a savgol filter with a generous window size of 499 and polynomial order of 2
-        channel_calculation = savgol_filter(channel_calculation, 499, 2)
+        # channel_calculation = savgol_filter(channel_calculation, 499, 2)
 
         # 10. Saving at the end
         all_frequencies[:, k] = frequencies
@@ -107,7 +116,7 @@ def analyse_all(file_location, dataset, software, SRATE, convert_power=True, con
     return all_frequencies, all_PS
 
 
-def process_plot(file_location, dataset, name, software, SRATE, channel_names,
+def process_plot_welch(file_location, dataset, name, software, SRATE, channel_names,
                  convert_power=True, convert_decibels=True, convert_mean=True, convert_max=True):
     # Colour map
     cmap = matplotlib.cm.get_cmap('gist_rainbow')
@@ -118,7 +127,7 @@ def process_plot(file_location, dataset, name, software, SRATE, channel_names,
     plt.ion()
     # For every participant
     for i in range(len(dataset)):
-        frequencies, power_db = analyse_all(file_location, dataset[i], software, SRATE, convert_power,
+        frequencies, power_db = analyse_all_welch(file_location, dataset[i], software, SRATE, convert_power,
                                             convert_decibels, convert_mean, convert_max)
         for k in range(2):
             plt.subplot(1, 2, k+1)
@@ -126,7 +135,7 @@ def process_plot(file_location, dataset, name, software, SRATE, channel_names,
             plt.xlabel('Frequency in Hz')
             plt.ylabel('Power')
             plt.xlim([2, 40])
-            plt.plot(frequencies[:, k], power_db[:, k], color=cmap(plot_colour[i]), alpha=0.55)
+            plt.plot(frequencies[:, k], power_db[1:, k], color=cmap(plot_colour[i]), alpha=0.55)
     # Just showing the first 40 Hz
     #  plt.ylim([0.3, 1])
     plt.draw()
