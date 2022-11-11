@@ -13,13 +13,14 @@ from FuncWelchOffline import process_plot_welch
 # "20102401_2_baseline", "20102401_5_mirror"]
 
 file_location = "C://Users//simonha//PycharmProjects//BrainMirror//data//"
+file_location_simon_pc = "C://Users//hanza//BrainMirror//data//"
 test_0410 = ["211221_1_baseline", "211221_2_baseline"]
 channel_names = ["PO7", "PO8"]
-save_vanilla_as = "BrainMirror_test_3"
+save_vanilla_as = "BrainMirror_test_4"
 save_welch_as = "BrainMirror_test_3"
 
-process_plot(file_location, test_0410, save_vanilla_as, "brainmirror", 512, channel_names,
+process_plot(file_location_simon_pc, test_0410, save_vanilla_as, "brainmirror", 512, channel_names,
              convert_max=False, convert_decibels=False)
 
-process_plot_welch(file_location, test_0410, save_welch_as, "brainmirror", 512, channel_names,
-             convert_mean=False, convert_power=False, convert_max=False, convert_decibels=False)
+# process_plot_welch(file_location, test_0410, save_welch_as, "brainmirror", 512, channel_names,
+#              convert_mean=False, convert_power=False, convert_max=False, convert_decibels=False)
