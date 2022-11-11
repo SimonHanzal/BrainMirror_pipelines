@@ -3,13 +3,15 @@
 ######################
 # Imports processing functions from separate files
 from FuncOffline import process_plot
-
+# And numpy to get the peak values
+import numpy as np
 ######################
 # Set Paths
 ######################
 # File paths in format "//"
 file_location = "C://Users//simonha//PycharmProjects//BrainMirror//data//"
 file_location_simon_pc = "C://Users//hanza//BrainMirror//data//"
+save_to = "C://Users//hanza//BrainMirror//data//"
 
 ######################
 # Specify variables for the function
@@ -31,6 +33,7 @@ save_name = "BrainMirror_test_4"
 # Run Analysis
 ######################
 
+# We will modify the function to specify what time window
 process_plot(
              file_location=file_location_simon_pc,
              dataset=analysed_datasets,
@@ -44,3 +47,17 @@ process_plot(
              convert_mean=True,
              convert_max=False
 )
+
+######################
+# Load, arrange and export data
+######################
+
+# Loop through the exported datasets
+
+data = np.genfromtxt("data/" + analysed_datasets[0] + "_output.csv", delimiter=" ")
+pass
+    # Select relevant values
+
+# Add them to a final dataframe
+
+# Save dataframe for loading into R

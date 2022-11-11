@@ -51,6 +51,7 @@ def analyse_all(file_location, dataset, software, SRATE, convert_power=True, con
         # 1. Preparing Data
         channel_calculation = data[:, k]
         channel_mean = mean(channel_calculation)
+        # Only selecting data from relevant timepoints
 
         # 2. Patching up Data
         channel_calculation = substitute_errors(channel_calculation, channel_mean)
@@ -127,9 +128,11 @@ def process_plot(file_location, dataset, name, software, SRATE, channel_names,
             plt.ylabel('Power')
             plt.xlim([2, 40])
             plt.plot(frequencies[:, k], power_db[:, k], color=cmap(plot_colour[i]), alpha=0.55)
+        output_data = np.insert(power_db, 0, np.squeeze(frequencies[:, 0]), axis=1)
+        np.savetxt("data/" + str(dataset[i]) + "_output.csv", output_data)
     # Just showing the first 40 Hz
     #  plt.ylim([0.3, 1])
     plt.draw()
     plt.show()
-    plt.savefig('plots/offline_plots/'+name+'.png')
+    plt.savefig("plots/offline_plots/"+name+".png")
     plt.close()
