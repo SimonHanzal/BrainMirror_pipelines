@@ -19,15 +19,27 @@ save_to = "C://Users//hanza//BrainMirror//data//"
 
 # Exact names of datasets to analyse
 analysed_datasets = [
-    "211221_1_baseline",
-    "211221_2_baseline"
+  #  "211221_1_baseline",
+  #  "211221_2_baseline",
+  #  "2810221_1_baseline",
+  #  "2810221_2_baseline",
+  #  "19012201_10_baseline",
+  #  "19012201_10_baseline",
+  #  "20102201_2_baseline",
+  #  "20102201_1_baseline",
+  #  "20102401_1_baseline",
+  #  "20102401_2_baseline",
+    "9111_1_baseline",
+    "9111_2_baseline",
+    "161122_1_baseline",
+    "161122_2_baseline"
 ]
 
 # Names of channels for plots
 channel_names = ["P7", "P8"]
 
 # Save dataset name as
-save_name = "BrainMirror_test_4"
+save_name = "BrainMirror_test_17112"
 
 ######################
 # Run Analysis
@@ -35,7 +47,7 @@ save_name = "BrainMirror_test_4"
 
 # We will modify the function to specify what time window
 process_plot(
-             file_location=file_location_simon_pc,
+             file_location=file_location,
              dataset=analysed_datasets,
              name=save_name,
              software="brainmirror",

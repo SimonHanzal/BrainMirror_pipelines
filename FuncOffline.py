@@ -112,7 +112,7 @@ def process_plot(file_location, dataset, name, software, SRATE, channel_names,
                  convert_power=True, convert_decibels=True, convert_mean=True, convert_max=True):
     # Colour map
     cmap = matplotlib.cm.get_cmap('gist_rainbow')
-    plot_colour = np.linspace(0, 1, 5)
+    plot_colour = np.linspace(0, 1, 25)
     # Initialise
     matplotlib.use('TkAgg')
     plt.figure(figsize=(24, 16))
