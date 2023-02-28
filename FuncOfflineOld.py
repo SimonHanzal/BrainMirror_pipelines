@@ -45,10 +45,8 @@ def substitute_errors(data, mean_value):
 def analyse_all(file_location, dataset, software, SRATE, convert_power=True, convert_decibels=False, convert_mean=True, convert_max=True):
     # And every channel
     data = software_import(file_location, dataset, software)
-    #data = data[0:59628, :]
     #data = data[19876:79504, :]
-    data = data[79504:139132, :]
-    #data = data[139132:198760,:]
+    data = data[139132:198760,:]
     all_frequencies = np.empty([int(len(data[:, 0])/2), 2])
     all_PS = np.empty([int(len(data[:, 0])/2), 2])
     for k in range(2):
@@ -90,7 +88,7 @@ def analyse_all(file_location, dataset, software, SRATE, convert_power=True, con
         if convert_mean:
             power_mean = np.mean(channel_calculation)
             #            if type(amplitude_max) == 'float':
-            channel_calculation = channel_calculation / power_mean
+            channel_calculation = channel_calculation - power_mean
         if convert_power:
             channel_calculation = channel_calculation ** 2
         # Converting data to decibels
@@ -131,7 +129,7 @@ def process_plot(file_location, dataset, name, software, SRATE, channel_names,
             plt.xlabel('Frequency in Hz')
             plt.ylabel('Power')
             plt.xlim([2, 40])
-            plt.ylim([0, 40])
+            #plt.ylim([0, 0.25])
             plt.plot(frequencies[:, k], power_db[:, k], color=cmap(plot_colour[i]), alpha=0.55)
         output_data = np.insert(power_db, 0, np.squeeze(frequencies[:, 0]), axis=1)
         np.savetxt("data/" + str(dataset[i]) + "_output.csv", output_data)
